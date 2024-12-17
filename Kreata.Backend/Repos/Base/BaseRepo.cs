@@ -55,6 +55,37 @@ namespace Kreata.Backend.Repos.Base
             }
         }
 
+        public async Task<Response> DeleteAsync(Guid id)
+        {
+            Response response = new();
+            TEntity? entityToDelete = _dbSet!.Where(e => e.Id == id).FirstOrDefault();
+
+            if (entityToDelete is null)
+                response = HandleExceptionOrError(nameof(DeleteAsync), null, $"A törlendő entitás nem található!");
+            else
+            {
+                try
+                {
+                    if (_dbContext is not null)
+                    {
+                        _dbContext.ChangeTracker.Clear();
+                        _dbContext.Entry(entityToDelete!).State = EntityState.Deleted;
+                        await _dbContext.SaveChangesAsync();
+                        return response;
+                    }
+                }
+                catch (Exception e)
+                {
+                    response.AppendNewError(e.Message);
+                }
+            }
+            response.AppendNewError($"{nameof(BaseRepo<TDbContext, TEntity>)} osztály, {nameof(DeleteAsync)} metódusban hiba keletkezett");
+            if (entityToDelete is not null)
+                response.AppendNewError($"Az entitás id:{entityToDelete.Id}");
+            response.AppendNewError($"Az entitás törlése nem sikerült!");
+            return response;
+        }
+
         private static Response HandleExceptionOrError(string methodName, Exception? exception, string additionalMessage = "")
         {
             Response response = new();
