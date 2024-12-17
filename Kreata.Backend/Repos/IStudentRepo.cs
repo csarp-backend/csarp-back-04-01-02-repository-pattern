@@ -7,8 +7,8 @@ namespace Kreata.Backend.Repos
     {
         Task<List<Student>> GetAllAsync();
         Task<Student?> GetByIdAsync(Guid id);
-        Task<ControllerResponse> UpdateStudentAsync(Student student);
-        Task<ControllerResponse> DeleteStudentAsync(Guid id);
-        Task<ControllerResponse> InsertStudentAsync(Student student);
+        Task<Response> UpdateStudentAsync(Student student);
+        Task<Response> DeleteStudentAsync(Guid id);
+        Task<Response> InsertStudentAsync(Student student);
     }
 }

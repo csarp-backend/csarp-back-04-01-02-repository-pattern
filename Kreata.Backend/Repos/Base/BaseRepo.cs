@@ -1,4 +1,5 @@
 ﻿using Kreta.Shared.Models;
+using Kreta.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -20,6 +21,18 @@ namespace Kreata.Backend.Repos.Base
 
         public async Task<List<TEntity>> GetAllAsync() => await _dbSet!.ToListAsync();
         public async Task<List<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> expression) => await _dbSet!.Where(expression).ToListAsync();
+
+        private static Response HandleExceptionOrError(string methodName, Exception? exception, string additionalMessage = "")
+        {
+            Response response = new();
+            if (!string.IsNullOrEmpty(methodName))
+                response.AppendNewError($"{methodName} metódusban hiba történt.");
+            if (exception is not null)
+                response.AppendNewError(exception.Message);
+            if (!string.IsNullOrWhiteSpace(additionalMessage))
+                response.AppendNewError(additionalMessage);
+            return response;
+        }
 
 
     }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Kreta.Shared.Responses
 {
-    public class ControllerResponse : ErrorStore
+    public class Response : ErrorStore
     {
         public bool IsSuccess => !HasError;
 
-        public ControllerResponse() : base() { }
+        public Response() : base() { }
     }
 }

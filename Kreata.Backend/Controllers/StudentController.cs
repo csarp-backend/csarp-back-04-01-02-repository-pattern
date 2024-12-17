@@ -47,7 +47,7 @@ namespace Kreata.Backend.Controllers
         [HttpPut()]
         public async Task<ActionResult> UpdateStudentAsync(StudentDto entity)
         {
-            ControllerResponse response = new();
+            Response response = new();
             if (_studentRepo is not null)
             {
                 response = await _studentRepo.UpdateStudentAsync(entity.ToStudent());
@@ -69,7 +69,7 @@ namespace Kreata.Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudendAsync(Guid id)
         {
-            ControllerResponse response = new();
+            Response response = new();
             if (_studentRepo is not null)
             {
                 response = await _studentRepo.DeleteStudentAsync(id);
@@ -92,7 +92,7 @@ namespace Kreata.Backend.Controllers
         [HttpPost()]
         public async Task<IActionResult> InsertStudentAsync(StudentDto student)
         {
-            ControllerResponse response = new();
+            Response response = new();
             if (_studentRepo is not null)
             {
                 response = await _studentRepo.InsertStudentAsync(student.ToStudent());

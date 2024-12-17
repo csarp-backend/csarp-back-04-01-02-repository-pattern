@@ -24,9 +24,9 @@ namespace Kreata.Backend.Repos
             return await _dbContext.Students.ToListAsync();
         }
 
-        public async Task<ControllerResponse> UpdateStudentAsync(Student student)
+        public async Task<Response> UpdateStudentAsync(Student student)
         {
-            ControllerResponse response = new ControllerResponse();
+            Response response = new Response();
             _dbContext.ChangeTracker.Clear();
             _dbContext.Entry(student).State = EntityState.Modified;
             try
@@ -42,9 +42,9 @@ namespace Kreata.Backend.Repos
             return response;
         }
 
-        public async Task<ControllerResponse> DeleteStudentAsync(Guid id)
+        public async Task<Response> DeleteStudentAsync(Guid id)
         {
-            ControllerResponse response = new ControllerResponse();
+            Response response = new Response();
             Student? studentToDelete = await GetByIdAsync(id);
             if (studentToDelete == null || studentToDelete == default)
             {
@@ -60,7 +60,7 @@ namespace Kreata.Backend.Repos
             return response;
         }
 
-        public async Task<ControllerResponse> InsertStudentAsync(Student student)
+        public async Task<Response> InsertStudentAsync(Student student)
         {
             if (student.HasId)
             {
@@ -72,9 +72,9 @@ namespace Kreata.Backend.Repos
             }
         }
 
-        private async Task<ControllerResponse> InsertNewItemAsync(Student student)
+        private async Task<Response> InsertNewItemAsync(Student student)
         {
-            ControllerResponse response = new ControllerResponse();
+            Response response = new Response();
             try
             {
                 _dbContext.Students.Add(student);
