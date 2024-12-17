@@ -21,6 +21,25 @@ namespace Kreata.Backend.Repos.Base
 
         public async Task<List<TEntity>> GetAllAsync() => await _dbSet!.ToListAsync();
         public async Task<List<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> expression) => await _dbSet!.Where(expression).ToListAsync();
+        public async Task<Response> UpdateAsync(TEntity entity)
+        {
+            Response response = new();
+            try
+            {
+                if (_dbContext is not null)
+                {
+                    _dbContext.ChangeTracker.Clear();
+                    _dbContext.Entry(entity).State = EntityState.Modified;
+                    await _dbContext.SaveChangesAsync();
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                return HandleExceptionOrError(nameof(UpdateAsync), e, $"{entity} frissítése nem sikerült!");
+            }
+            return response;
+        }
 
         private static Response HandleExceptionOrError(string methodName, Exception? exception, string additionalMessage = "")
         {
