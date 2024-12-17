@@ -1,5 +1,6 @@
 ﻿using Kreta.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Kreata.Backend.Repos.Base
 {
@@ -18,6 +19,8 @@ namespace Kreata.Backend.Repos.Base
         }
 
         public async Task<List<TEntity>> GetAllAsync() => await _dbSet!.ToListAsync();
+        public async Task<List<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> expression) => await _dbSet!.Where(expression).ToListAsync();
+
 
     }
 }
