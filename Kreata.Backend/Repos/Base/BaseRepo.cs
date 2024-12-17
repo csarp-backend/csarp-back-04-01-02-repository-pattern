@@ -7,5 +7,15 @@ namespace Kreata.Backend.Repos.Base
         where TDbContext : DbContext
         where TEntity : class, IDbEntity<TEntity>, new()
     {
+        private readonly DbContext? _dbContext;
+        protected readonly DbSet<TEntity>? _dbSet;
+
+        public BaseRepo(TDbContext? dbContext)
+        {
+            ArgumentNullException.ThrowIfNull(dbContext, $"A {nameof(TEntity)} adatbázis tábla nem elérhető!");
+            _dbContext = dbContext;
+            _dbSet = _dbContext.Set<TEntity>() ?? throw new ArgumentException($"A {nameof(TEntity)} adatbázis tábla nem elérhető!");
+        }
+
     }
 }
