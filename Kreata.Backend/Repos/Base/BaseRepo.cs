@@ -19,8 +19,8 @@ namespace Kreata.Backend.Repos.Base
             _dbSet = _dbContext.Set<TEntity>() ?? throw new ArgumentException($"A {nameof(TEntity)} adatbázis tábla nem elérhető!");
         }
 
-        public async Task<List<TEntity>> GetAllAsync() => await _dbSet!.ToListAsync();
-        public async Task<List<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> expression) => await _dbSet!.Where(expression).ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbSet!.ToListAsync();
+        public async Task<IEnumerable<TEntity>> FindByConditionAsync(Expression<Func<TEntity, bool>> expression) => await _dbSet!.Where(expression).ToListAsync();
         public async Task<Response> UpdateAsync(TEntity entity)
         {
             Response response = new();
