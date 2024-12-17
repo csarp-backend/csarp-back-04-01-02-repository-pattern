@@ -2,7 +2,7 @@
 
 namespace Kreta.Shared.Models
 {
-    public class Student
+    public class Student : IDbEntity<Student>
     {
         public Student(Guid id,string firstName, string lastName, DateTime birthsDay, int schoolYear, SchoolClassType schoolClass, string educationLevel)
         {

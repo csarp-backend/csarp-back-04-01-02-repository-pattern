@@ -1,14 +1,9 @@
-﻿using Kreta.Shared.Models;
-using Kreta.Shared.Responses;
+﻿using Kreata.Backend.Repos.Base;
+using Kreta.Shared.Models;
 
 namespace Kreata.Backend.Repos
 {
-    public interface IStudentRepo
+    public interface IStudentRepo : IBaseRepo<Student>
     {
-        Task<List<Student>> GetAllAsync();
-        Task<Student?> GetByIdAsync(Guid id);
-        Task<Response> UpdateStudentAsync(Student student);
-        Task<Response> DeleteStudentAsync(Guid id);
-        Task<Response> InsertStudentAsync(Student student);
     }
 }
