@@ -4,5 +4,9 @@
     {
         public Guid Id { get; set; }
         public bool HasId => Id != Guid.Empty ? true : false;
+        public string GetDbSetName()
+        {
+            return string.Concat(new TEntity().GetType().Name, 's');
+        }
     }
 }
