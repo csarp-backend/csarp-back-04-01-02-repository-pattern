@@ -17,5 +17,7 @@ namespace Kreata.Backend.Repos.Base
             _dbSet = _dbContext.Set<TEntity>() ?? throw new ArgumentException($"A {nameof(TEntity)} adatbázis tábla nem elérhető!");
         }
 
+        public async Task<List<TEntity>> GetAllAsync() => await _dbSet!.ToListAsync();
+
     }
 }
