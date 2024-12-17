@@ -41,6 +41,20 @@ namespace Kreata.Backend.Repos.Base
             return response;
         }
 
+        public async Task<Response> CreateAsync(TEntity entity)
+        {
+            try
+            {
+                _dbSet!.Add(entity);
+                await _dbContext!.SaveChangesAsync();
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return HandleExceptionOrError(nameof(CreateAsync), e, $"{entity} hozzáadása az adatbázishoz nem sikerült!");
+            }
+        }
+
         private static Response HandleExceptionOrError(string methodName, Exception? exception, string additionalMessage = "")
         {
             Response response = new();
