@@ -43,7 +43,7 @@ namespace Kreata.Backend.Extensions
 
         public static void ConfigureRepos(this IServiceCollection services) 
         { 
-            services.AddScoped<IStudentRepo, StudentRepo>();
+            services.AddScoped<IStudentRepo, StudentRepo<KretaInMemoryContext>>();
         }
     }
 }
