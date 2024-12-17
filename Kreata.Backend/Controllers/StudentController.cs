@@ -1,7 +1,6 @@
 ﻿using Kreata.Backend.Repos;
 using Kreta.Shared.Dtos;
 using Kreta.Shared.Extensions;
-using Kreta.Shared.Models;
 using Kreta.Shared.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,100 +12,70 @@ namespace Kreata.Backend.Controllers
     {
         private IStudentRepo _studentRepo;
 
-        public StudentController(IStudentRepo studentRepo)
+        public StudentController(IStudentRepo? studentRepo)
         {
-            _studentRepo = studentRepo;
+            _studentRepo = studentRepo ?? throw new ArgumentNullException(nameof(studentRepo));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBy(Guid id)
         {
-            Student? entity = new();
-            if (_studentRepo is not null)
-            {
-                entity = await _studentRepo.GetByIdAsync(id);
-                if (entity != null)
-                    return Ok(entity.ToStudentDto());
-            }
-            return BadRequest("Az adatok elérhetetlenek!");
+            var entity = (await _studentRepo.FindByConditionAsync(s => s.Id == id)).FirstOrDefault();
+            if (entity != null)
+                return Ok(entity.ToStudentDto());
+            else
+                return NotFound();
+            
         }
 
         [HttpGet]
         public async Task<IActionResult> SelectAllRecordToListAsync()
         {
-            List<Student>? users = new();
-
-            if (_studentRepo != null)
-            {
-                users = await _studentRepo.GetAllAsync();
-                return Ok(users.Select(student => student.ToStudentDto()));
-            }
-            return BadRequest("Az adatok elérhetetlenek!");
+            var users = await _studentRepo.GetAllAsync();
+            return Ok(users.Select(student => student.ToStudentDto()));
         }
 
         [HttpPut()]
         public async Task<ActionResult> UpdateStudentAsync(StudentDto entity)
         {
             Response response = new();
-            if (_studentRepo is not null)
+            response = await _studentRepo.UpdateAsync(entity.ToStudent());
+            if (response.HasError)
             {
-                response = await _studentRepo.UpdateStudentAsync(entity.ToStudent());
-                if (response.HasError)
-                {
-                    Console.WriteLine(response.Error);
-                    response.ClearAndAddError("A diák adatainak módosítása nem sikerült!");
-                    return BadRequest(response);
-                }
-                else
-                {
-                    return Ok(response);
-                }
+                Console.WriteLine(response.Error);
+                response.ClearAndAddError("A diák adatainak módosítása nem sikerült!");
+                return BadRequest(response);
             }
-            response.ClearAndAddError("Az adatok frissítés nem lehetséges!");
-            return BadRequest(response);
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudendAsync(Guid id)
         {
             Response response = new();
-            if (_studentRepo is not null)
-            {
-                response = await _studentRepo.DeleteStudentAsync(id);
+            response = await _studentRepo.DeleteAsync(id);
 
-                if (response.HasError)
-                {
-                    Console.WriteLine(response.Error);
-                    response.ClearAndAddError("A diák adatainak törlése nem sikerült!");
-                    return BadRequest(response);
-                }
-                else
-                {
-                    return Ok(response);
-                }
+            if (response.HasError)
+            {
+                Console.WriteLine(response.Error);
+                response.ClearAndAddError("A diák adatainak törlése nem sikerült!");
+                return BadRequest(response);
             }
-            response.ClearAndAddError("Az adatok törlése nem lehetséges!");
-            return BadRequest(response);
+            return Ok(response);           
         }
 
         [HttpPost()]
-        public async Task<IActionResult> InsertStudentAsync(StudentDto student)
+        public async Task<IActionResult> CreateStudentAsync(StudentDto student)
         {
             Response response = new();
-            if (_studentRepo is not null)
+            response = await _studentRepo.CreateAsync(student.ToStudent());
+            if (response.HasError)
             {
-                response = await _studentRepo.InsertStudentAsync(student.ToStudent());
-                if (response.HasError)
-                {
-                    Console.WriteLine(response.Error);
-                }
-                else
-                {
-                    return Ok(response);
-                }
+                Console.WriteLine(response.Error);
+                response.ClearAndAddError("Az új adatok mentése nem lehetséges!");
+                return BadRequest(response);
             }
-            response.ClearAndAddError("Az új adatok mentése nem lehetséges!");
-            return BadRequest(response);
+            return Ok(response);
         }
     }
 }
