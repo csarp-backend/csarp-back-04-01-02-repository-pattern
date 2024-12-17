@@ -6,6 +6,8 @@ namespace Kreata.Backend.Repos
 {
     public class StudentRepo<TDbContext> : BaseRepo<TDbContext, Student>, IStudentRepo where TDbContext : KretaContext
     {
-       
+        public StudentRepo(TDbContext? dbContext) : base(dbContext)
+        {
+        }
     }
 }
